@@ -42,7 +42,7 @@
 #
 !IFNDEF MSVC_VER
 #assume msvc VS2008.
-MSVC_VER=1500
+MSVC_VER=1800
 !ENDIF
 
 ###############################################################################
@@ -58,7 +58,7 @@ MSVC_VER=1500
 # But the paths *should* be absolute (relative paths mess up in submakefiles).
 
 !IFNDEF GDAL_HOME
-GDAL_HOME = "C:\warmerda\bld"
+GDAL_HOME = "E:\GitCode\GDAL_Test\lib_x86_release"
 !ENDIF
 !IFNDEF BINDIR
 BINDIR = $(GDAL_HOME)\bin
@@ -860,7 +860,7 @@ NAS_ENABLED = YES
 !IFDEF WIN64
 !UNDEF STDCALL
 !ELSE
-SYM_PREFIX=_
+SYM_PREFIX=
 !ENDIF
 
 EXTERNAL_LIBS =	$(OGDILIB) $(XERCES_LIB) $(EXPAT_LIB) $(OCI_LIB) $(PG_LIB) \
