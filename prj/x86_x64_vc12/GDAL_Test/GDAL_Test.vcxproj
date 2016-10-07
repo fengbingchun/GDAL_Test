@@ -28,7 +28,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -68,6 +68,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>.\../../../lib/dbg/x86_vc12/</OutDir>
+    <IntDir>.\../../../obj/dbg/x86_vc12/GDAL_Test\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -86,17 +88,27 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>E:\GitCode\GDAL_Test\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderOutputFile>.\../../../obj/dbg/x86_vc12/GDAL_Test\GDAL_Test.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\../../../obj/dbg/x86_vc12/GDAL_Test\</AssemblerListingLocation>
+      <ObjectFileName>.\../../../obj/dbg/x86_vc12/GDAL_Test\</ObjectFileName>
+      <ProgramDataBaseFileName>.\../../../obj/dbg/x86_vc12/GDAL_Test\</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>.\../../../lib/dbg/x86_vc12/GDAL_Test.exe</OutputFile>
+      <AdditionalLibraryDirectories>E:\GitCode\GDAL_Test\lib_x86_debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>gdal_i.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Bscmake>
+      <OutputFile>.\../../../obj/dbg/x86_vc12/GDAL_Test\GDAL_Test.bsc</OutputFile>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -105,7 +117,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>E:\GitCode\GDAL_Test\lib_x64_debug\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\GitCode\GDAL_Test\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderOutputFile>.\../../../obj/dbg/x64_vc12/GDAL_Test\GDAL_Test.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\../../../obj/dbg/x64_vc12/GDAL_Test\</AssemblerListingLocation>
       <ObjectFileName>.\../../../obj/dbg/x64_vc12/GDAL_Test\</ObjectFileName>
@@ -116,6 +128,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <OutputFile>.\../../../lib/dbg/x64_vc12/GDAL_Test.exe</OutputFile>
       <AdditionalLibraryDirectories>E:\GitCode\GDAL_Test\lib_x64_debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>gdal_i.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
       <OutputFile>.\../../../obj/dbg/x64_vc12/GDAL_Test\GDAL_Test.bsc</OutputFile>
@@ -130,7 +143,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>E:\GitCode\GDAL_Test\lib_x86_release\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\GitCode\GDAL_Test\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderOutputFile>.\../../../obj/rel/x86_vc12/GDAL_Test\GDAL_Test.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\../../../obj/rel/x86_vc12/GDAL_Test\</AssemblerListingLocation>
       <ObjectFileName>.\../../../obj/rel/x86_vc12/GDAL_Test\</ObjectFileName>
@@ -162,7 +175,7 @@
       <AssemblerListingLocation>.\../../../obj/rel/x64_vc12/GDAL_Test\</AssemblerListingLocation>
       <ObjectFileName>.\../../../obj/rel/x64_vc12/GDAL_Test\</ObjectFileName>
       <ProgramDataBaseFileName>.\../../../obj/rel/x64_vc12/GDAL_Test\</ProgramDataBaseFileName>
-      <AdditionalIncludeDirectories>E:\GitCode\GDAL_Test\lib_x64_release\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\GitCode\GDAL_Test\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
