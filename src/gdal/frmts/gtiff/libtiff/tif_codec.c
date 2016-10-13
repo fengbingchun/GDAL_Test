@@ -69,8 +69,10 @@ static int NotConfigured(TIFF*, int);
 #ifndef LOGLUV_SUPPORT
 #define TIFFInitSGILog NotConfigured
 #endif
+#ifdef _WIN32 // fengbingchun
 #ifndef LZMA_SUPPORT
 #define TIFFInitLZMA NotConfigured
+#endif
 #endif
 
 /*
@@ -98,7 +100,9 @@ TIFFCodec _TIFFBuiltinCODECS[] = {
     { "PixarLog",	COMPRESSION_PIXARLOG,	TIFFInitPixarLog },
     { "SGILog",		COMPRESSION_SGILOG,	TIFFInitSGILog },
     { "SGILog24",	COMPRESSION_SGILOG24,	TIFFInitSGILog },
+#ifdef _WIN32 // fengbingchun
     { "LZMA",		COMPRESSION_LZMA,	TIFFInitLZMA },
+#endif
     { NULL,             0,                      NULL }
 };
 

@@ -396,8 +396,10 @@ extern int TIFFInitPixarLog(TIFF*, int);
 #ifdef LOGLUV_SUPPORT
 extern int TIFFInitSGILog(TIFF*, int);
 #endif
-#ifdef LZMA_SUPPORT
+#ifdef _WIN32 // fengbingchun
+#ifdef LZMA_SUPPORT_FBC
 extern int TIFFInitLZMA(TIFF*, int);
+#endif
 #endif
 #ifdef VMS
 extern const TIFFCodec _TIFFBuiltinCODECS[];

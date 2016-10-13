@@ -743,6 +743,8 @@
 #ifdef LOGLUV_SUPPORT
 #define TIFFInitSGILog gdal_TIFFInitSGILog
 #endif
+#ifdef _WIN32 // fengbingchun
 #ifdef LZMA_SUPPORT
 #define TIFFInitLZMA gdal_TIFFInitLZMA
+#endif
 #endif

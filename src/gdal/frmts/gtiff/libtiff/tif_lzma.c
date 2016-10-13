@@ -24,6 +24,7 @@
  */
 
 #include "tiffiop.h"
+#ifdef _WIN32 // fengbingchun
 #ifdef LZMA_SUPPORT
 /*
  * TIFF Library.
@@ -491,5 +492,6 @@ bad:
 	return 0;
 }
 #endif /* LZMA_SUPPORT */
+#endif
 
 /* vim: set ts=8 sts=8 sw=8 noet: */

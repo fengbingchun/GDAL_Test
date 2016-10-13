@@ -101,13 +101,14 @@ typedef struct {
         uint_fast16_t numchans;
         jp2_cmapent_t *ents;
 } jp2_cmap_t;
-
+#ifdef _WIN32 // fengbingchun
 #ifdef HAVE_JASPER_UUID
 typedef struct {
         uint_fast32_t datalen;
         uint_fast8_t uuid[16];
         uint_fast8_t *data;
 } jp2_uuid_t;
+#endif
 #endif
 
 struct jp2_boxops_s;
@@ -133,8 +134,10 @@ typedef struct {
                 jp2_pclr_t pclr;
                 jp2_cdef_t cdef;
                 jp2_cmap_t cmap;
+#ifdef _WIN32 // fengbingchun
 #ifdef HAVE_JASPER_UUID
                 jp2_uuid_t uuid;
+#endif
 #endif
         } data;
 
@@ -152,9 +155,11 @@ extern jp2_box_t *jp2_box_create(int type);
 extern void jp2_box_destroy(jp2_box_t *box);
 extern jp2_box_t *jp2_box_get(jas_stream_t *in);
 extern int jp2_box_put(jp2_box_t *box, jas_stream_t *out);
+#ifdef _WIN32 // fengbingchun
 #ifdef HAVE_JASPER_UUID
 int jp2_encode_uuid(jas_image_t *image, jas_stream_t *out,
                     char *optstr, jp2_box_t *uuid);
+#endif
 #endif
 }
 // XXX: End of JasPer header.
@@ -1103,6 +1108,7 @@ JPEG2000CreateCopy( const char * pszFilename, GDALDataset *poSrcDS,
 /* -------------------------------------------------------------------- */
     if ( STARTS_WITH_CI(pszFormatName, "jp2") )
     {
+#ifdef _WIN32 // fengbingchun
 #ifdef HAVE_JASPER_UUID
         double  adfGeoTransform[6];
         if( CSLFetchBoolean( papszOptions, "GeoJP2", TRUE ) &&
@@ -1162,6 +1168,7 @@ JPEG2000CreateCopy( const char * pszFilename, GDALDataset *poSrcDS,
         else
         {
 #endif
+#endif
             if ( jp2_encode( psImage, psStream, pszOptionBuf) < 0 )
             {
                 CPLError( CE_Failure, CPLE_FileIO,
@@ -1173,8 +1180,10 @@ JPEG2000CreateCopy( const char * pszFilename, GDALDataset *poSrcDS,
                 jas_stream_close( psStream );
                 return NULL;
             }
+#ifdef _WIN32 // fengbingchun
 #ifdef HAVE_JASPER_UUID
         }
+#endif
 #endif
     }
     else    // Write JPC code stream
