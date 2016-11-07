@@ -342,3 +342,189 @@ int test_gdal_GDALDataset()
 
 	return 0;
 }
+
+int test_gadl_GDALDataset_write()
+{
+	const char* image_name = "E:/GitCode/GDAL_Test/test_images/1.jpg";
+
+	{ // write bgr: CreateCopy
+		GDALAllRegister();
+
+		const char* pszFormat = "jpeg"; //"bmp";// "png";//"GTiff";
+		GDALDriver* poDriver = GetGDALDriverManager()->GetDriverByName(pszFormat);
+		if (!poDriver) {
+			fprintf(stderr, "get driver by name failed\n");
+			return -1;
+		}
+
+		char** papszMetadata = poDriver->GetMetadata();;
+		if (CSLFetchBoolean(papszMetadata, GDAL_DCAP_CREATE, FALSE))
+			fprintf(stderr, "Driver %s supports Create() method.\n", pszFormat);
+		if (CSLFetchBoolean(papszMetadata, GDAL_DCAP_CREATECOPY, FALSE))
+			fprintf(stderr, "Driver %s supports CreateCopy() method.\n", pszFormat);
+		if (!CSLFetchBoolean(papszMetadata, GDAL_DCAP_CREATECOPY, FALSE)) {
+			fprintf(stderr, "Driver %s don't supports CreateCopy() method.\n", pszFormat);
+			return -1;
+		}
+
+		GDALDataset* poDataset = (GDALDataset*)GDALOpen(image_name, GA_ReadOnly);
+		if (poDataset == nullptr) {
+			std::cout << "input image error" << std::endl;
+			return -1;
+		}
+
+		const char* pszDstFilename = "E:/GitCode/GDAL_Test/test_images/ret_1.jpg";
+		// All drivers that support creating new files support the CreateCopy() method, but only a few support the Create() method
+		GDALDataset* poDstDS = poDriver->CreateCopy(pszDstFilename, poDataset, FALSE, nullptr, nullptr, nullptr);
+		if (!poDstDS) {
+			std::cout << "create copy failed" << std::endl;
+			return -1;
+		}
+
+		GDALClose((GDALDatasetH)poDataset);
+		GDALClose((GDALDatasetH)poDstDS);
+	}
+
+	{ // write: bgr<->rgb
+		GDALAllRegister();
+
+		const char* pszFormat = "GTiff";
+		GDALDriver* poDriver = GetGDALDriverManager()->GetDriverByName(pszFormat);
+		if (!poDriver) {
+			fprintf(stderr, "get driver by name failed\n");
+			return -1;
+		}
+
+		char** papszMetadata = poDriver->GetMetadata();;
+		if (!CSLFetchBoolean(papszMetadata, GDAL_DCAP_CREATE, FALSE)) {
+			fprintf(stderr, "Driver %s don't supports Create() method.\n", pszFormat);
+			return -1;
+		}
+
+		GDALDataset* poDataset = (GDALDataset*)GDALOpen(image_name, GA_ReadOnly);
+		if (poDataset == nullptr) {
+			std::cout << "input image error" << std::endl;
+			return -1;
+		}
+
+		int width = poDataset->GetRasterXSize();
+		int height = poDataset->GetRasterYSize();
+		int band_count = poDataset->GetRasterCount();
+		GDALDataType gdal_data_type = poDataset->GetRasterBand(1)->GetRasterDataType();
+
+		int pBandMap[3] = { 1, 2, 3 };
+		unsigned char* pData = new unsigned char[width * height * band_count]; //RRRR...BBBB...GGGG...
+		poDataset->RasterIO(GF_Read, 0, 0, width, height, pData, width, height, gdal_data_type, band_count, pBandMap, 0, 0, 0);
+
+		char** papszOptions = nullptr;
+		papszOptions = CSLSetNameValue(papszOptions, "INTERLEAVE", "BAND");
+		const char* pszDstFilename = "E:/GitCode/GDAL_Test/test_images/ret_2.jpg";
+		GDALDataset* poDstDS = poDriver->Create(pszDstFilename, width, height, band_count, gdal_data_type, papszOptions);
+		if (!poDstDS) {
+			std::cout << "create copy failed" << std::endl;
+			return -1;
+		}
+
+		int pBandMap_[3] = { 3, 2, 1 };
+		poDstDS->RasterIO(GF_Write, 0, 0, width, height, pData, width, height, gdal_data_type, band_count, pBandMap_, 0, 0, 0);
+
+		GDALClose((GDALDatasetH)poDataset);
+		GDALClose((GDALDatasetH)poDstDS);
+		delete[] pData;
+	}
+
+	{ // write: bgr->b, single channel
+		GDALAllRegister();
+
+		const char* pszFormat = "GTiff";
+		GDALDriver* poDriver = GetGDALDriverManager()->GetDriverByName(pszFormat);
+		if (!poDriver) {
+			fprintf(stderr, "get driver by name failed\n");
+			return -1;
+		}
+
+		char** papszMetadata = poDriver->GetMetadata();;
+		if (!CSLFetchBoolean(papszMetadata, GDAL_DCAP_CREATE, FALSE)) {
+			fprintf(stderr, "Driver %s don't supports Create() method.\n", pszFormat);
+			return -1;
+		}
+
+		GDALDataset* poDataset = (GDALDataset*)GDALOpen(image_name, GA_ReadOnly);
+		if (poDataset == nullptr) {
+			std::cout << "input image error" << std::endl;
+			return -1;
+		}
+
+		int width = poDataset->GetRasterXSize();
+		int height = poDataset->GetRasterYSize();
+		int band_count = poDataset->GetRasterCount();
+		GDALDataType gdal_data_type = poDataset->GetRasterBand(1)->GetRasterDataType();
+
+		unsigned char* pData = new unsigned char[width * height];
+		GDALRasterBand* poBand = poDataset->GetRasterBand(2); // from 1 to GetRasterCount()
+		poBand->RasterIO(GF_Read, 0, 0, width, height, pData, width, height, gdal_data_type, 0, 0, 0);
+
+		char** papszOptions = nullptr;
+		papszOptions = CSLSetNameValue(papszOptions, "INTERLEAVE", "BAND");
+		const char* pszDstFilename = "E:/GitCode/GDAL_Test/test_images/ret_3.jpg";
+		GDALDataset* poDstDS = poDriver->Create(pszDstFilename, width, height, 1, gdal_data_type, papszOptions);
+		if (!poDstDS) {
+			std::cout << "create copy failed" << std::endl;
+			return -1;
+		}
+
+		int bandMap { 1 };
+		poDstDS->RasterIO(GF_Write, 0, 0, width, height, pData, width, height, gdal_data_type, 1, &bandMap, 0, 0, 0);
+
+		GDALClose((GDALDatasetH)poDataset);
+		GDALClose((GDALDatasetH)poDstDS);
+		delete[] pData;
+	}
+
+	{ // write: crop image
+		GDALAllRegister();
+
+		const char* pszFormat = "GTiff";
+		GDALDriver* poDriver = GetGDALDriverManager()->GetDriverByName(pszFormat);
+		if (!poDriver) {
+			fprintf(stderr, "get driver by name failed\n");
+			return -1;
+		}
+
+		char** papszMetadata = poDriver->GetMetadata();;
+		if (!CSLFetchBoolean(papszMetadata, GDAL_DCAP_CREATE, FALSE)) {
+			fprintf(stderr, "Driver %s don't supports Create() method.\n", pszFormat);
+			return -1;
+		}
+
+		GDALDataset* poDataset = (GDALDataset*)GDALOpen(image_name, GA_ReadOnly);
+		if (poDataset == nullptr) {
+			std::cout << "input image error" << std::endl;
+			return -1;
+		}
+
+		int width = poDataset->GetRasterXSize() / 2;
+		int height = poDataset->GetRasterYSize() / 2;
+		int band_count = poDataset->GetRasterCount();
+		GDALDataType gdal_data_type = poDataset->GetRasterBand(1)->GetRasterDataType();
+
+		unsigned char* pData = new unsigned char[width  * height * band_count];
+		int pBandMap[3] = { 1, 2, 3 };
+		poDataset->RasterIO(GF_Read, 0, 0, width, height, pData, width, height, gdal_data_type, band_count, pBandMap, 0, 0, 0);
+
+		const char* pszDstFilename = "E:/GitCode/GDAL_Test/test_images/ret_4.jpg";
+		GDALDataset* poDstDS = poDriver->Create(pszDstFilename, width, height, band_count, gdal_data_type, nullptr);
+		if (!poDstDS) {
+			std::cout << "create copy failed" << std::endl;
+			return -1;
+		}
+
+		poDstDS->RasterIO(GF_Write, 0, 0, width, height, pData, width, height, gdal_data_type, band_count, pBandMap, 0, 0, 0);
+
+		GDALClose((GDALDatasetH)poDataset);
+		GDALClose((GDALDatasetH)poDstDS);
+		delete[] pData;
+	}
+
+	return 0;
+}
