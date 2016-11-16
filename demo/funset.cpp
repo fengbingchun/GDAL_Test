@@ -343,7 +343,7 @@ int test_gdal_GDALDataset()
 	return 0;
 }
 
-int test_gadl_GDALDataset_write()
+int test_gdal_GDALDataset_write()
 {
 	const char* image_name = "E:/GitCode/GDAL_Test/test_images/1.jpg";
 
@@ -525,6 +525,35 @@ int test_gadl_GDALDataset_write()
 		GDALClose((GDALDatasetH)poDstDS);
 		delete[] pData;
 	}
+
+	return 0;
+}
+
+int test_gdal_support_chinese_path(int argc, char* argv[])
+{
+	if (argc < 2) {
+		fprintf(stderr, "params fail\n");
+		return -1;
+	}
+
+	GDALAllRegister();
+	CPLSetConfigOption("GDAL_FILENAME_IS_UTF8", "NO");
+
+	GDALDataset* poSrc = (GDALDataset*)GDALOpen(argv[1], GA_ReadOnly);
+	if (poSrc == nullptr) {
+		std::cout << "input image error" << std::endl;
+		return -1;
+	}
+
+	int width_src = poSrc->GetRasterXSize();
+	int height_src = poSrc->GetRasterYSize();
+	int band_count_src = poSrc->GetRasterCount();
+	fprintf(stderr, "image width: %d, height: %d, bandCount: %d\n", width_src, height_src, band_count_src);
+	GDALDataType gdal_data_type = poSrc->GetRasterBand(1)->GetRasterDataType();
+	int depth = GDALGetDataTypeSize((GDALDataType)gdal_data_type);
+	fprintf(stderr, "depth: %d\n", depth);
+
+	GDALClose((GDALDatasetH)poSrc);
 
 	return 0;
 }
