@@ -104,6 +104,7 @@ int test_gdal_GDALRasterBand()
 
 int test_gdal_GDALDataset()
 {
+	// Blog: http://blog.csdn.net/fengbingchun/article/details/52825309
 	const char* image_name = "E:/GitCode/GDAL_Test/test_images/3.jpg";
 
 	GDALAllRegister();
@@ -345,6 +346,7 @@ int test_gdal_GDALDataset()
 
 int test_gdal_GDALDataset_write()
 {
+	// Blog: http://blog.csdn.net/fengbingchun/article/details/53070583
 	const char* image_name = "E:/GitCode/GDAL_Test/test_images/1.jpg";
 
 	{ // write bgr: CreateCopy
@@ -531,6 +533,7 @@ int test_gdal_GDALDataset_write()
 
 int test_gdal_support_chinese_path(int argc, char* argv[])
 {
+	// Blog: http://blog.csdn.net/fengbingchun/article/details/53185706
 	if (argc < 2) {
 		fprintf(stderr, "params fail\n");
 		return -1;
